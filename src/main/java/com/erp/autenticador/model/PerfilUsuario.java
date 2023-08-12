@@ -1,45 +1,59 @@
 package com.erp.autenticador.model;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
-@Table(name = "erp03_perfil_usuario")
-@SequenceGenerator(name = "erp03_perfil_usuario_erp03_cod_perfil_usuario_seq", sequenceName = "erp03_perfil_usuario_erp03_cod_perfil_usuario_seq", initialValue = 1, allocationSize = 1)
+@Table(name = "ur04_usuario_perfil")
+//@SequenceGenerator(name = "erp03_perfil_usuario_erp03_cod_perfil_usuario_seq", sequenceName = "erp03_perfil_usuario_erp03_cod_perfil_usuario_seq", initialValue = 1, allocationSize = 1)
 
 public class PerfilUsuario {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "erp03_perfil_usuario_erp03_cod_perfil_usuario_seq")
-    @Column(name = "erp03_cod_perfil_usuario")
-    private Long id;
+    @GeneratedValue
+    @Column(name = "ur04_cod_usuario_perfil", columnDefinition = "uuid DEFAULT gen_random_uuid()")
+    private UUID id;
     @ManyToOne
-    @JoinColumn(name = "fkerp03erp01_cod_usuario")
-    private Usuario modulo;
+    @JoinColumn(name = "fkur04ur05_cod_usuario")
+    private Usuario usuario;
     @ManyToOne
-    @JoinColumn(name = "fkerp03erp02_cod_perfil")
+    @JoinColumn(name = "fkur04ur03_cod_perfil")
     private Perfil perfil;
-    @Column(name = "erp03_data_cadastro")
-    private LocalDate dataCadastro;
-    @Column(name = "erp03_data_exclusao")
-    private LocalDate dataExclusao;
+    @CreationTimestamp
+    @Column(name = "ur04_data_habilitacao")
+    private LocalDate dataHabilitacao;
+    @Column(name = "ur04_data_desabilitacao")
+    private LocalDate dataDesabilitacao;
 
-    @Column(name = "erp03_ativo")
+    @Column(name = "ur04_ativo")
     private Boolean ativo;
 
-    public Long getId() {
+    @Deprecated
+    public PerfilUsuario() {
+    }
+
+    public PerfilUsuario(Usuario usuario, Perfil perfil) {
+        this.usuario = usuario;
+        this.perfil = perfil;
+        this.ativo = Boolean.TRUE;
+    }
+
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public Usuario getModulo() {
-        return modulo;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setModulo(Usuario modulo) {
-        this.modulo = modulo;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public Perfil getPerfil() {
@@ -50,20 +64,20 @@ public class PerfilUsuario {
         this.perfil = perfil;
     }
 
-    public LocalDate getDataCadastro() {
-        return dataCadastro;
+    public LocalDate getDataHabilitacao() {
+        return dataHabilitacao;
     }
 
-    public void setDataCadastro(LocalDate dataCadastro) {
-        this.dataCadastro = dataCadastro;
+    public void setDataHabilitacao(LocalDate dataHabilitacao) {
+        this.dataHabilitacao = dataHabilitacao;
     }
 
-    public LocalDate getDataExclusao() {
-        return dataExclusao;
+    public LocalDate getDataDesabilitacao() {
+        return dataDesabilitacao;
     }
 
-    public void setDataExclusao(LocalDate dataExclusao) {
-        this.dataExclusao = dataExclusao;
+    public void setDataDesabilitacao(LocalDate dataDesabilitacao) {
+        this.dataDesabilitacao = dataDesabilitacao;
     }
 
     public Boolean getAtivo() {
@@ -72,5 +86,10 @@ public class PerfilUsuario {
 
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
+    }
+
+    public void desabilitarPerfil() {
+        this.ativo = false;
+        this.dataDesabilitacao = LocalDate.now();
     }
 }

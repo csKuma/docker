@@ -1,7 +1,9 @@
 package com.erp.autenticador.controller;
 
+import com.erp.autenticador.model.response.DtoSimples;
 import com.erp.autenticador.model.response.ModuloResponse;
 import com.erp.autenticador.model.response.PerfilResponse;
+//import com.erp.autenticador.service.UtilService;
 import com.erp.autenticador.service.UtilService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,8 +26,9 @@ public class UtilController {
     public ResponseEntity<List<PerfilResponse>> listarPerfis(){
         return ResponseEntity.ok().body(utilService.listarPerfils());
     }
-    @GetMapping("/modulos")
-    public ResponseEntity<List<ModuloResponse>> listarModulos(){
-        return ResponseEntity.ok().body(utilService.listarModulos());
+       @GetMapping("/permissoes")
+    public ResponseEntity<List<DtoSimples>> listarPermissoes(){
+        return ResponseEntity.ok().body(utilService.listarPermissoes());
     }
+
 }

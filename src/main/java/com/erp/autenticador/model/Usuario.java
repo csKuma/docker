@@ -2,35 +2,49 @@ package com.erp.autenticador.model;
 
 
 import com.erp.autenticador.model.request.UsuarioRequest;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "erp01_usuario")
-@SequenceGenerator(name = "public.erp01_usuario_erp01_cod_usuario_seq", sequenceName = "public.erp01_usuario_erp01_cod_usuario_seq", initialValue = 1, allocationSize = 1)
-
-public class Usuario {
+@Table(name = "ur05_usuario")
+public class Usuario implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "public.erp01_usuario_erp01_cod_usuario_seq")
-    @Column(name = "erp01_cod_usuario")
-    private Long id;
-    @Column(name = "erp01_nome")
+    @GenericGenerator(name = "UUIDGenerator", strategy = "uuid2")
+    @GeneratedValue(generator = "UUIDGenerator")
+    @Column(name = "ur05_cod_usuario", columnDefinition = "uuid DEFAULT gen_random_uuid()")
+    private UUID id ;
+    @Column(name = "ur05_nome")
     private String nome;
-    @Column(name = "erp01_cpfcnpj")
+    @Column(name = "ur05_cpf")
     private String cpfCnpj;
-    @Column(name = "erp01_email")
+    @Column(name = "ur05_email")
     private String email;
-    @Column(name = "erp01_telefone")
+    @Column(name = "ur05_telefone")
     private String telefone;
-    @Column(name = "erp01_usuario")
+    @Column(name = "ur05_id")
     private String usuario;
-    @Column(name = "erp01_senha")
+    @Column(name = "ur05_senha")
     private String senha;
-    @Column(name = "erp01_ativo")
-    private Boolean ativo;
-    @Column(name = "erp01_senha_padrao")
-    private Boolean senhaPadrao;
+    @Column(name = "ur05_resetar_senha")
+    private Boolean primeiroAcesso;
+    @CreationTimestamp
+    @Column(name = "ur05_data_cadastro")
+    private LocalDate dataCadastro;
+    @Column(name = "ur05_ultimo_acesso")
+    private LocalDate ultimoAcesso;
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER)
+    private List<PerfilUsuario> roles;
 
     public Usuario() {
     }
@@ -47,8 +61,7 @@ public class Usuario {
         this.telefone = telefone;
         this.usuario = usuario;
         this.senha = senha;
-        this.ativo = true;
-        this.senhaPadrao = true;
+        this.primeiroAcesso = true;
     }
 
     public Usuario(UsuarioRequest dto) {
@@ -57,18 +70,15 @@ public class Usuario {
         this.usuario = dto.usuario();
         this.telefone = dto.telefone();
         this.email = dto.email();
-        this.ativo = true;
-        this.senhaPadrao = true;
-
-
+        this.primeiroAcesso = true;
     }
 
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -120,19 +130,75 @@ public class Usuario {
         this.senha = senha;
     }
 
-    public Boolean getAtivo() {
-        return ativo;
+    public Boolean getPrimeiroAcesso() {
+        return primeiroAcesso;
     }
 
-    public void setAtivo(Boolean ativo) {
-        this.ativo = ativo;
+    public void setPrimeiroAcesso(Boolean primeiroAcesso) {
+        this.primeiroAcesso = primeiroAcesso;
     }
 
-    public Boolean getSenhaPadrao() {
-        return senhaPadrao;
+    public void setRoles(List<PerfilUsuario> roles) {
+        this.roles = roles;
     }
 
-    public void setSenhaPadrao(Boolean senhaPadrao) {
-        this.senhaPadrao = senhaPadrao;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        this.roles.removeIf(r->r.getAtivo() == null || !r.getAtivo());
+        return Collections.unmodifiableList(
+                roles.stream().map(r->r.getPerfil()).collect(Collectors.toList())
+        );
+//        return null;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.usuario;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    public List<Perfil> getRoles() {
+        this.roles.removeIf(r->!r.getAtivo());
+        return roles.stream().map(r->r.getPerfil()).collect(Collectors.toList());
+    }
+
+    public LocalDate getDataCadastro() {
+        return dataCadastro;
+    }
+
+    public void setDataCadastro(LocalDate dataCadastro) {
+        this.dataCadastro = dataCadastro;
+    }
+
+    public LocalDate getUltimoAcesso() {
+        return ultimoAcesso;
+    }
+
+    public void setUltimoAcesso(LocalDate ultimoAcesso) {
+        this.ultimoAcesso = ultimoAcesso;
     }
 }

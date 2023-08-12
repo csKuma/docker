@@ -2,37 +2,36 @@ package com.erp.autenticador.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
-@Table(name = "erp05_perfil_modulo")
-@SequenceGenerator(name = "erp05_perfil_modulo_erp05_cod_perfil_modulo_seq", sequenceName = "erp05_perfil_modulo_erp05_cod_perfil_modulo_seq", initialValue = 1, allocationSize = 1)
-
+@Table(name = "ur08_modulo_perfil")
 public class PerfilModulo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "erp05_perfil_modulo_erp05_cod_perfil_modulo_seq")
-    @Column(name = "erp05_cod_perfil_modulo")
-    private Long id;
+    @GeneratedValue
+    @Column(name = "ur08_cod_modulo_perfil",columnDefinition = "uuid DEFAULT gen_random_uuid()")
+    private UUID id;
     @ManyToOne
-    @JoinColumn(name = "fkerp05erp04_cod_modulo")
-
+    @JoinColumn(name = "fkur08ur02_cod_modulo")
     private Modulo modulo;
     @ManyToOne
-    @JoinColumn(name = "fkerp05erp02_cod_perfil")
+    @JoinColumn(name = "fkur08ur03_cod_perfil")
     private Perfil perfil;
-    @Column(name = "erp05_data_cadastro")
+    @Column(name = "ur08_data_cadastro")
     private LocalDate dataCadastro;
-    @Column(name = "erp05_data_exclusao")
+    @Column(name = "ur08_data_alteracao")
+    private LocalDate dataAlteracao;
+    @Column(name = "ur08_data_exclusao")
     private LocalDate dataExclusao;
-
-    @Column(name = "erp05_ativo")
+    @Column(name = "ur08_ativo")
     private Boolean ativo;
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -58,6 +57,14 @@ public class PerfilModulo {
 
     public void setDataCadastro(LocalDate dataCadastro) {
         this.dataCadastro = dataCadastro;
+    }
+
+    public LocalDate getDataAlteracao() {
+        return dataAlteracao;
+    }
+
+    public void setDataAlteracao(LocalDate dataAlteracao) {
+        this.dataAlteracao = dataAlteracao;
     }
 
     public LocalDate getDataExclusao() {

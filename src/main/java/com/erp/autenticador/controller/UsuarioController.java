@@ -1,5 +1,8 @@
 package com.erp.autenticador.controller;
 
+import com.erp.autenticador.model.exception.UUIDValide;
+import com.erp.autenticador.model.request.PerfilUsuarioRequest;
+import com.erp.autenticador.model.request.UsuarioAlteracaoRequest;
 import com.erp.autenticador.model.request.UsuarioEdicaoRequest;
 import com.erp.autenticador.model.request.UsuarioRequest;
 import com.erp.autenticador.model.response.UsuarioResponse;
@@ -11,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -33,13 +37,20 @@ public class UsuarioController {
     }
 
     @GetMapping("/{usuarioId}")
-    public ResponseEntity<UsuarioResponse> criarusuario(@PathVariable("usuarioId") Long usuarioId) {
+    public ResponseEntity<UsuarioResponse> criarusuario(@PathVariable("usuarioId") @UUIDValide String usuarioId) {
         return ResponseEntity.ok().body(usuarioService.buscarUsuarioPorId(usuarioId));
     }
+
     @PutMapping("/{usuarioId}")
-    public ResponseEntity<UsuarioResponse> atualizarUsuario(@PathVariable("usuarioId") Long usuarioId,
-                                                            @RequestBody @Valid UsuarioEdicaoRequest dto){
-        usuarioService.editarUsuario(usuarioId,dto);
+    public ResponseEntity<UsuarioResponse> atualizarUsuario(@PathVariable("usuarioId") String usuarioId,
+                                                            @RequestBody @Valid UsuarioAlteracaoRequest dto) {
+        usuarioService.editarUsuario(usuarioId, dto);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/vincular-perfil")
+    public ResponseEntity vincularPerfil(@RequestBody @Valid PerfilUsuarioRequest dto){
+        usuarioService.vincularPerfilAoUsuario(dto);
         return ResponseEntity.noContent().build();
     }
 

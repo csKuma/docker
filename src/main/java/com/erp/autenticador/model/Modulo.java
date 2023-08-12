@@ -2,30 +2,33 @@ package com.erp.autenticador.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
-@Table(name = "erp04_modulo")
-@SequenceGenerator(name = "erp04_modulo_erp04_cod_modulo_seq", sequenceName = "erp04_modulo_erp04_cod_modulo_seq", initialValue = 1, allocationSize = 1)
-
+@Table(name = "ur02_modulo")
 public class Modulo {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "erp04_modulo_erp04_cod_modulo_seq")
-    @Column(name = "erp04_cod_modulo")
-    private Long id;
-    @Column(name = "erp04_descricao")
+    @GeneratedValue
+    @Column(name = "ur02_cod_modulo", columnDefinition = "uuid DEFAULT gen_random_uuid()")
+    private UUID id;
+    @Column(name = "ur02_descricao")
     private String descricao;
-    @Column(name = "erp03_data_cadastro")
-    private LocalDate dataCadastro;
-    @Column(name = "erp03_data_exclusao")
-    private LocalDate dataExclusao;
-    @Column(name = "erp03_ativo")
-    private Boolean ativo;
+    @ManyToOne
+    @JoinColumn(name = "fkur02ur02_modulo_pai")
+    private Modulo moduloPai;
+    @ManyToOne
+    @JoinColumn(name = "fkur02ur01_cod_aplicacao")
+    private Aplicacao aplicacao;
+    @Column(name = "ur02_icone")
+    private String icone;
+    @Column(name = "ur02_path")
+    private String path;
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -37,27 +40,35 @@ public class Modulo {
         this.descricao = descricao;
     }
 
-    public LocalDate getDataCadastro() {
-        return dataCadastro;
+    public Modulo getModuloPai() {
+        return moduloPai;
     }
 
-    public void setDataCadastro(LocalDate dataCadastro) {
-        this.dataCadastro = dataCadastro;
+    public void setModuloPai(Modulo moduloPai) {
+        this.moduloPai = moduloPai;
     }
 
-    public LocalDate getDataExclusao() {
-        return dataExclusao;
+    public Aplicacao getAplicacao() {
+        return aplicacao;
     }
 
-    public void setDataExclusao(LocalDate dataExclusao) {
-        this.dataExclusao = dataExclusao;
+    public void setAplicacao(Aplicacao aplicacao) {
+        this.aplicacao = aplicacao;
     }
 
-    public Boolean getAtivo() {
-        return ativo;
+    public String getIcone() {
+        return icone;
     }
 
-    public void setAtivo(Boolean ativo) {
-        this.ativo = ativo;
+    public void setIcone(String icone) {
+        this.icone = icone;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }
