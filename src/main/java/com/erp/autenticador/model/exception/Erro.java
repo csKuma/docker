@@ -1,26 +1,37 @@
 package com.erp.autenticador.model.exception;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Erro {
     private String titulo;
     private Integer status;
-    private String excecao;
+
     private String mensagemUsuario;
-    private String mensagemDesenvolvedor;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<CampoErro> erros = new ArrayList<>();
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy hh:mm:ss. zzz", timezone = "GMT-0300")
     private Date timestamp;
 
-    public Erro() {}
+    public Erro() {
+    }
 
-    public Erro(String titulo, Integer status, String excecao, String msgUser, String msgDev) {
+    public Erro(String titulo, Integer status, String msgUser) {
         this.titulo = titulo;
         this.status = status;
-        this.excecao = excecao;
         this.mensagemUsuario = msgUser;
-        this.mensagemDesenvolvedor = msgDev;
+        this.timestamp = new Date();
+    }
+
+    public Erro(String titulo, Integer status, String mensagemUsuario, List<CampoErro> erros) {
+        this.titulo = titulo;
+        this.status = status;
+        this.mensagemUsuario = mensagemUsuario;
+        this.erros = erros;
         this.timestamp = new Date();
     }
 
@@ -36,20 +47,9 @@ public class Erro {
         this.status = status;
     }
 
-    public String getExcecao() {
-        return excecao;
-    }
-
     public String getMensagemUsuario() {
         return mensagemUsuario;
     }
-
-
-    public String getMensagemDesenvolvedor() {
-        return mensagemDesenvolvedor;
-    }
-
-
     public Date getTimestamp() {
         return timestamp;
     }
@@ -62,4 +62,21 @@ public class Erro {
 //        return result;
 //    }
 
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+    public void setMensagemUsuario(String mensagemUsuario) {
+        this.mensagemUsuario = mensagemUsuario;
+    }
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public List<CampoErro> getErros() {
+        return erros;
+    }
+
+    public void setErros(List<CampoErro> erros) {
+        this.erros = erros;
+    }
 }

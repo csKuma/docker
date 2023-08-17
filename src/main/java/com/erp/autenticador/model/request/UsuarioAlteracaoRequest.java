@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.UUID;
 
 public record UsuarioAlteracaoRequest(
         @JsonDeserialize(using = StringPadronization.class)
@@ -22,7 +23,7 @@ public record UsuarioAlteracaoRequest(
         String usuario,
         @UUIDValide
         @NotBlank
-        String perfil
+        UUID perfil
 ) {
 
 }

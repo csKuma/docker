@@ -10,26 +10,24 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.UUID;
 
 public record UsuarioRequest(
         @JsonDeserialize(using = StringPadronization.class)
         @NotBlank
         String nome,
         @NotBlank
-        String cpfCnpj,
+        String cpf,
         @Email
         @NotBlank
         String email,
         @NotBlank
         String telefone,
-        @NotBlank
-        String usuario,
-        @NotBlank
-        String senha,
 
-        @UUIDValide
-        @NotBlank
-        String perfil
+        UUID empresa,
+//        @UUIDValide
+//        @NotBlank
+        UUID perfil
 ) {
 
 }

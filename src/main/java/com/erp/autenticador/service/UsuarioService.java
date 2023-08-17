@@ -3,15 +3,16 @@ package com.erp.autenticador.service;
 import com.erp.autenticador.model.Perfil;
 import com.erp.autenticador.model.PerfilUsuario;
 import com.erp.autenticador.model.Usuario;
+import com.erp.autenticador.model.exception.CampoErro;
+import com.erp.autenticador.model.exception.ConflitoException;
 import com.erp.autenticador.model.exception.NotFound;
-import com.erp.autenticador.model.request.PerfilUsuarioRequest;
-import com.erp.autenticador.model.request.UsuarioAlteracaoRequest;
-import com.erp.autenticador.model.request.UsuarioRequest;
+import com.erp.autenticador.model.request.*;
 import com.erp.autenticador.model.response.UsuarioResponse;
 import com.erp.autenticador.repository.PerfilRepository;
 import com.erp.autenticador.repository.PerfilUsuarioRepository;
 import com.erp.autenticador.repository.UsuarioRepository;
 
+import com.erp.autenticador.repository.spec.UsuarioSpec;
 import com.erp.autenticador.util.validacao.ValidacaoUUID;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -20,8 +21,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
-import java.util.UUID;
+import java.sql.ClientInfoStatus;
+import java.util.*;
 
 @Service
 public class UsuarioService {
@@ -43,15 +44,31 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioResponse criarUsuario(UsuarioRequest dto) {
+        validarCadastroUsuario(dto);
         Usuario usuario = MontarUsuario(dto);
-        Usuario save = usuarioRepository.save(usuario);
+        Usuario save = salvarUsuario(usuario);
         salvarPerfilUsuario(save, dto.perfil());
         return MontarUsuarioResponse(save);
     }
 
-    private void salvarPerfilUsuario(Usuario usuario, String Idperfil) {
+    private void validarCadastroUsuario(UsuarioRequest dto) {
+        List<CampoErro> erros = new ArrayList<>();
+        if (usuarioRepository.existsByCpfCnpj(dto.cpf())) {
+            erros.add(new CampoErro("cpfCnpj", "cpfCnpj ja cadastrado"));
+        }
+        if (usuarioRepository.existsByEmail(dto.email())) {
+            erros.add(new CampoErro("email", "email ja cadastrado"));
+        }
+        if (usuarioRepository.existsByTelefone(dto.telefone())) {
+            erros.add(new CampoErro("telefone", "telefone ja cadastrado"));
+        }
+        if (!erros.isEmpty()) throw new ConflitoException("Os dados a seguir estão cadastrados:", erros);
+
+    }
+
+    private void salvarPerfilUsuario(Usuario usuario, UUID Idperfil) {
         if (!Objects.isNull(Idperfil)) {
-            Perfil perfil = perfilRepository.findById(UUID.fromString(Idperfil)).orElseThrow(new NotFound("Perfil nao encontrado"));
+            Perfil perfil = perfilRepository.findById(Idperfil).orElseThrow(new NotFound("Perfil nao encontrado"));
             perfilUsuarioRepository.save(new PerfilUsuario(usuario, perfil));
         }
     }
@@ -62,28 +79,54 @@ public class UsuarioService {
         Usuario old = usuarioRepository.findById(UUID.fromString(idUsuario)).orElseThrow(new NotFound("Usuario não encontrado"));
         BeanUtils.copyProperties(dto, old, "id", "senha", "ultimoAcesso", "primeiroAcesso", "dataCadastro");
         alterarPerfil(old, dto.perfil());
-        return MontarUsuarioResponse(usuarioRepository.save(old));
+        return MontarUsuarioResponse(salvarUsuario(old));
     }
 
-    private void alterarPerfil(Usuario usuario, String idPerfil) {
+    private void alterarPerfil(Usuario usuario, UUID idPerfil) {
         if (!Objects.isNull(idPerfil)) {
             Perfil perfil = buscarPerfil(idPerfil);
             alterarPerfilAnterior(perfil, usuario);
         }
     }
 
-    private Perfil buscarPerfil(String idPerfil) {
-        return perfilRepository.findById(UUID.fromString(idPerfil)).orElseThrow(new NotFound("Perfil não encontrado"));
+    private Perfil buscarPerfil(UUID idPerfil) {
+        return perfilRepository.findById(idPerfil).orElseThrow(new NotFound("Perfil não encontrado"));
     }
 
-    public UsuarioResponse buscarUsuarioPorId(String idUsuario) {
-        return usuarioRepository.findById(UUID.fromString(idUsuario))
+    public UsuarioResponse buscarUsuarioPorId(UUID idUsuario) {
+        return usuarioRepository.findById(idUsuario)
                 .map(u -> MontarUsuarioResponse(u))
                 .orElseThrow(new NotFound("Usuario não encontrado"));
     }
 
     public Page<UsuarioResponse> ListarUsuariosPaginado(Pageable pageable) {
         return usuarioRepository.findAll(pageable).map(u -> MontarUsuarioResponse(u));
+    }
+
+    public void primeiroAcesso(PrimeiroAcessoDto dto) {
+
+    }
+
+    @Transactional
+    public void vincularPerfilAoUsuario(PerfilUsuarioRequest dto) {
+        Perfil perfil = buscarPerfil(dto.perfil());
+        Usuario usuario = buacarUsuario(dto.usuario());
+        alterarPerfilAnterior(perfil, usuario);
+    }
+
+    public String resetarSenha(UUID usuarioId) {
+        Usuario usuario = buacarUsuario(usuarioId);
+        usuario.setSenha(passwordEncoder.encode(usuario.getCpfCnpj()));
+        usuario.setPrimeiroAcesso(true);
+        salvarUsuario(usuario);
+        return "Senha redefinida com sucesso, o usuário poderá acessar o sistema utilizando seu CPF como senha";
+    }
+
+    public String alterarSenhaLogado(AlterarSenhaRequest dto) {
+        Usuario usuario = buacarUsuario(dto.id());
+        usuario.setSenha(passwordEncoder.encode(dto.senha()));
+        Usuario save = salvarUsuario(usuario);
+        return "Senha Alterada Com sucesso";
     }
 
 
@@ -94,23 +137,12 @@ public class UsuarioService {
                 usuario.getCpfCnpj(),
                 usuario.getEmail(),
                 usuario.getTelefone(),
-                usuario.getUsername());
+                usuario.getUsername(),
+                null);
     }
 
     private Usuario MontarUsuario(UsuarioRequest dto) {
-        return new Usuario(dto.nome(),
-                dto.cpfCnpj(),
-                dto.email(),
-                dto.telefone(),
-                dto.usuario(),
-                passwordEncoder.encode(dto.senha()));
-    }
-
-    @Transactional
-    public void vincularPerfilAoUsuario(PerfilUsuarioRequest dto) {
-        Perfil perfil = buscarPerfil(dto.perfil());
-        Usuario usuario = buacarUsuario(dto);
-        alterarPerfilAnterior(perfil, usuario);
+        return new Usuario(dto);
     }
 
     private void alterarPerfilAnterior(Perfil perfil, Usuario usuario) {
@@ -118,7 +150,23 @@ public class UsuarioService {
         perfilUsuarioRepository.save(new PerfilUsuario(usuario, perfil));
     }
 
-    private Usuario buacarUsuario(PerfilUsuarioRequest dto) {
-        return usuarioRepository.findById(UUID.fromString(dto.usuario())).orElseThrow(new NotFound("Usuario não encontrado"));
+    private Usuario buacarUsuario(UUID usuarioId) {
+        return usuarioRepository.findById(usuarioId).orElseThrow(new NotFound("Usuario não encontrado"));
+    }
+
+
+    private Usuario salvarUsuario(Usuario usuario) {
+        return usuarioRepository.save(usuario);
+    }
+
+    public UsuarioResponse RecuperarSenha(RecuperarSenha dto) {
+        Optional<Usuario> usuario = usuarioRepository.buscarUsuarioPorEmailOuTelefone(dto.email(), dto.telefone());
+        if (usuario.isPresent()) {
+            usuario.get().setSenha(passwordEncoder.encode(dto.senha()));
+            salvarUsuario(usuario.get());
+            return MontarUsuarioResponse(usuario.get());
+        } else {
+            throw new NotFound("usuario não Encontrado");
+        }
     }
 }

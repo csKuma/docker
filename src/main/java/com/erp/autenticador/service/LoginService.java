@@ -3,6 +3,7 @@ package com.erp.autenticador.service;
 import com.erp.autenticador.model.Modulo;
 import com.erp.autenticador.model.Usuario;
 import com.erp.autenticador.model.exception.TokenInvalidoException;
+import com.erp.autenticador.model.request.CheckTokenRequest;
 import com.erp.autenticador.model.request.LoginDTO;
 import com.erp.autenticador.model.response.*;
 import com.erp.autenticador.repository.ModuloRepository;
@@ -80,7 +81,8 @@ public class LoginService {
         return new UsernamePasswordAuthenticationToken(dto.usuario(), dto.senha());
     }
 
-    public CheckTokenDTO checkToken(String token) {
+    public CheckTokenDTO checkToken(CheckTokenRequest dto) {
+        String token = dto.token();
         if (tokenService.isTokenValido(token)) {
             Usuario usuario = tokenService.getUsuario(token);
             CheckTokenDTO checkTokenDTO = new CheckTokenDTO(tokenService.getUsuario(token), tokenService.getDataExpiracao(token));

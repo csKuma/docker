@@ -66,8 +66,8 @@ public class Usuario implements UserDetails {
 
     public Usuario(UsuarioRequest dto) {
         this.nome = dto.nome();
-        this.cpfCnpj = dto.cpfCnpj();
-        this.usuario = dto.usuario();
+        this.cpfCnpj = dto.cpf();
+        this.usuario = dto.email();
         this.telefone = dto.telefone();
         this.email = dto.email();
         this.primeiroAcesso = true;

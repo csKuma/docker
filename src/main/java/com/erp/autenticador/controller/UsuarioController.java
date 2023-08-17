@@ -1,10 +1,7 @@
 package com.erp.autenticador.controller;
 
 import com.erp.autenticador.model.exception.UUIDValide;
-import com.erp.autenticador.model.request.PerfilUsuarioRequest;
-import com.erp.autenticador.model.request.UsuarioAlteracaoRequest;
-import com.erp.autenticador.model.request.UsuarioEdicaoRequest;
-import com.erp.autenticador.model.request.UsuarioRequest;
+import com.erp.autenticador.model.request.*;
 import com.erp.autenticador.model.response.UsuarioResponse;
 import com.erp.autenticador.service.UsuarioService;
 import org.springframework.data.domain.Page;
@@ -37,19 +34,34 @@ public class UsuarioController {
     }
 
     @GetMapping("/{usuarioId}")
-    public ResponseEntity<UsuarioResponse> criarusuario(@PathVariable("usuarioId") @UUIDValide String usuarioId) {
+    public ResponseEntity<UsuarioResponse> criarusuario(@PathVariable("usuarioId") UUID usuarioId) {
         return ResponseEntity.ok().body(usuarioService.buscarUsuarioPorId(usuarioId));
     }
 
     @PutMapping("/{usuarioId}")
-    public ResponseEntity<UsuarioResponse> atualizarUsuario(@PathVariable("usuarioId") String usuarioId,
+    public ResponseEntity<UsuarioResponse> atualizarUsuario(@PathVariable("usuarioId") @UUIDValide String usuarioId,
                                                             @RequestBody @Valid UsuarioAlteracaoRequest dto) {
         usuarioService.editarUsuario(usuarioId, dto);
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/resetarSenha/{usuarioId}")
+    public ResponseEntity<String> resetarSenha(@PathVariable("usuarioId") @UUIDValide UUID usuarioId) {
+        return ResponseEntity.accepted().body(usuarioService.resetarSenha(usuarioId));
+    }
+
+    @PutMapping("/recuperarSenha")
+    public ResponseEntity<UsuarioResponse> alterarSenha(@RequestBody RecuperarSenha dto) {
+        return ResponseEntity.accepted().body(usuarioService.RecuperarSenha(dto));
+    }
+
+    @PutMapping("/alterarSenha/{id}")
+    public ResponseEntity<String> atualizar(AlterarSenhaRequest dto) {
+        return ResponseEntity.accepted().body(usuarioService.alterarSenhaLogado(dto));
+    }
+
     @PostMapping("/vincular-perfil")
-    public ResponseEntity vincularPerfil(@RequestBody @Valid PerfilUsuarioRequest dto){
+    public ResponseEntity vincularPerfil(@RequestBody @Valid PerfilUsuarioRequest dto) {
         usuarioService.vincularPerfilAoUsuario(dto);
         return ResponseEntity.noContent().build();
     }

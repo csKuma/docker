@@ -4,13 +4,14 @@ import com.erp.autenticador.model.exception.UUIDValide;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 public record PerfilUsuarioRequest(
         @NotBlank
         @UUIDValide
-        String perfil,
+        UUID perfil,
         @NotBlank()
         @UUIDValide
-        String usuario
+        UUID usuario
 ) {
 }

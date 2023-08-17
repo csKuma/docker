@@ -1,12 +1,12 @@
 package com.erp.autenticador.controller;
 
+import com.erp.autenticador.model.exception.UUIDValide;
 import com.erp.autenticador.model.response.ModuloResponse;
 import com.erp.autenticador.service.ModuloService;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,9 +20,20 @@ public class ModuloController {
     }
 
     @GetMapping
+    @ApiOperation("listar todos os modulos junto com submodulos")
     public ResponseEntity<List<ModuloResponse>> listarModulos(
             @RequestParam(value = "descricao", required = false) String descricao
     ) {
         return ResponseEntity.ok().body(moduloService.listarModulos(descricao));
     }
+
+    @GetMapping("/empresa")
+    @ApiOperation("rota para listar Modulos de uma empresa (em consturção)")
+    public ResponseEntity<List<ModuloResponse>> listarModulos(@RequestParam("empresaId") @UUIDValide String empresaId,
+                                                              @RequestParam(value = "descricao", required = false) String descricao
+    ) {
+        return ResponseEntity.ok().body(moduloService.listarModulosDaEmpresa(empresaId, descricao));
+//        return null;
+    }
+
 }

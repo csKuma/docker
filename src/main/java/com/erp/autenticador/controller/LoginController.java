@@ -1,5 +1,6 @@
 package com.erp.autenticador.controller;
 
+import com.erp.autenticador.model.request.CheckTokenRequest;
 import com.erp.autenticador.model.request.LoginDTO;
 import com.erp.autenticador.model.response.CheckTokenDTO;
 import com.erp.autenticador.model.response.TokenDTO;
@@ -29,7 +30,7 @@ public class LoginController {
         return ResponseEntity.ok().body(service.login(dto));
     }
     @PostMapping("/checkToken")
-    public ResponseEntity<CheckTokenDTO> checkToken(@RequestBody @NotBlank String token){
+    public ResponseEntity<CheckTokenDTO> checkToken(@RequestBody @NotBlank CheckTokenRequest token){
         return ResponseEntity.ok().body(service.checkToken(token));
     }
 }

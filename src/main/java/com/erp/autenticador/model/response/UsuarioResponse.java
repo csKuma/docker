@@ -9,5 +9,6 @@ public record UsuarioResponse(
         String cpfCnpj,
         String email,
         String telefone,
-        String usuario) {
+        String usuario,
+        String empresa) {
 }

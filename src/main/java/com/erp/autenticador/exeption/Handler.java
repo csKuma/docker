@@ -24,6 +24,9 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import static org.springframework.util.ClassUtils.getDescriptiveType;
 
@@ -35,11 +38,14 @@ public class Handler {
     private final String tituloNaoEncontradoComEsseParametro = "Não foi encontrado resultado com esses parâmetros";
     private final String tituloErroDePreenchimento = "Erro de preenchimento";
     private final String mensagemTenteNovamenteMaisTarde = "Tente novamente mais tarde";
-
     private final String OperacaoInvalida = "Operação invalida";
 
-    private Erro novoErro(String titulo, Integer status, String excecao, String msgUser, String msgDev) {
-        return new Erro(titulo, status, excecao, msgUser, msgDev);
+    private Erro novoErro(String titulo, Integer status, String exessao, String msgUser, String msgDev) {
+        return new Erro(titulo, status, msgUser);
+    }
+
+    private Erro novoErroComLista(String titulo, Integer status, String msgUser, List<CampoErro> erros) {
+        return new Erro(titulo, status, msgUser, erros);
     }
 
     public String getDevMessageFromStackTrace(Exception ex) {
@@ -121,24 +127,21 @@ public class Handler {
     // Campos vazios ou nulos (@Valid)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Erro> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-
-        String titulo, msgUser, msgDev, camposComErros = "";
+        Erro err = new Erro();
+        List<CampoErro> erros = new ArrayList<>();
+        String titulo, msgUser;
 
         for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
-            camposComErros += fieldError.getField() + ": " + fieldError.getDefaultMessage() + ", ";
+            erros.add(new CampoErro(fieldError.getField(), fieldError.getDefaultMessage()));
         }
 
-        camposComErros = camposComErros.substring(0, camposComErros.length() - 2);
-
         titulo = "Erro de preenchimento";
-        msgUser = "Os seguintes campos são invalidos: " + camposComErros;
-        msgDev = getDevMessageFromStackTrace(ex);
+        msgUser = "Os seguintes campos são invalidos: ";
 
         ex.printStackTrace();
 
-        Erro erro = novoErro(titulo, 400, ex.getClass().getSimpleName(), msgUser, msgDev);
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+        Erro erro = novoErroComLista(titulo, 409, msgUser, erros);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
 
     // Parâmetro ausente (@RequestParam)
@@ -314,16 +317,15 @@ public class Handler {
 
     @ExceptionHandler(ConflitoException.class)
     public ResponseEntity<Erro> handleConflitoException(ConflitoException ex) {
-
+        ex.getErros();
         String titulo, msgUser, msgDev;
 
         titulo = "Dado já cadastrado";
         msgUser = ex.getMessage();
         msgDev = getDevMessageFromStackTrace(ex);
-
         ex.printStackTrace();
 
-        Erro erro = novoErro(titulo, 409, ex.getClass().getSimpleName(), msgUser, msgDev);
+        Erro erro = novoErroComLista(titulo, 409, msgUser, ex.getErros());
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(erro);
     }
