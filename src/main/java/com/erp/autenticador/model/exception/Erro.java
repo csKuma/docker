@@ -14,8 +14,8 @@ public class Erro {
     private String mensagemUsuario;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<CampoErro> erros = new ArrayList<>();
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy hh:mm:ss. zzz", timezone = "GMT-0300")
-    private Date timestamp;
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy hh:mm:ss. zzz", timezone = "GMT-0300")
+    private Long timestamp;
 
     public Erro() {
     }
@@ -24,7 +24,7 @@ public class Erro {
         this.titulo = titulo;
         this.status = status;
         this.mensagemUsuario = msgUser;
-        this.timestamp = new Date();
+        this.timestamp = System.currentTimeMillis();
     }
 
     public Erro(String titulo, Integer status, String mensagemUsuario, List<CampoErro> erros) {
@@ -32,7 +32,7 @@ public class Erro {
         this.status = status;
         this.mensagemUsuario = mensagemUsuario;
         this.erros = erros;
-        this.timestamp = new Date();
+        this.timestamp = System.currentTimeMillis();
     }
 
     public String getTitulo() {
@@ -50,9 +50,8 @@ public class Erro {
     public String getMensagemUsuario() {
         return mensagemUsuario;
     }
-    public Date getTimestamp() {
-        return timestamp;
-    }
+
+
 
 //    public static Erro getErros(FeignException e) throws JsonProcessingException {
 //        e.printStackTrace();
@@ -65,10 +64,16 @@ public class Erro {
     public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
+
     public void setMensagemUsuario(String mensagemUsuario) {
         this.mensagemUsuario = mensagemUsuario;
     }
-    public void setTimestamp(Date timestamp) {
+
+    public Long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
     }
 
