@@ -78,11 +78,11 @@ public class LoginService {
     }
 
     public UsernamePasswordAuthenticationToken converter(LoginDTO dto) {
-        return new UsernamePasswordAuthenticationToken(dto.usuario(), dto.senha());
+        return new UsernamePasswordAuthenticationToken(dto.getUsuario(), dto.getSenha());
     }
 
     public CheckTokenDTO checkToken(CheckTokenRequest dto) {
-        String token = dto.token();
+        String token = dto.getToken();
         if (tokenService.isTokenValido(token)) {
             Usuario usuario = tokenService.getUsuario(token);
             CheckTokenDTO checkTokenDTO = new CheckTokenDTO(tokenService.getUsuario(token), tokenService.getDataExpiracao(token));

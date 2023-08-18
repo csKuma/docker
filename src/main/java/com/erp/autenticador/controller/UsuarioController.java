@@ -2,8 +2,10 @@ package com.erp.autenticador.controller;
 
 import com.erp.autenticador.model.exception.UUIDValide;
 import com.erp.autenticador.model.request.*;
+import com.erp.autenticador.model.response.PrimeiroAcessoResponse;
 import com.erp.autenticador.model.response.UsuarioResponse;
 import com.erp.autenticador.service.UsuarioService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -33,35 +35,44 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.criarUsuario(dto));
     }
 
+    @PostMapping("/primeiro-acesso")
+    public ResponseEntity<PrimeiroAcessoResponse> primeiroAcesso(@RequestBody @Valid PrimeiroAcessoDto dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.primeiroAcesso(dto));
+    }
+
     @GetMapping("/{usuarioId}")
-    public ResponseEntity<UsuarioResponse> criarusuario(@PathVariable("usuarioId") UUID usuarioId) {
+    public ResponseEntity<UsuarioResponse> buscarUsuarioPorId(@PathVariable("usuarioId") UUID usuarioId) {
         return ResponseEntity.ok().body(usuarioService.buscarUsuarioPorId(usuarioId));
     }
 
     @PutMapping("/{usuarioId}")
-    public ResponseEntity<UsuarioResponse> atualizarUsuario(@PathVariable("usuarioId") @UUIDValide String usuarioId,
-                                                            @RequestBody @Valid UsuarioAlteracaoRequest dto) {
+    public ResponseEntity atualizarUsuario(@PathVariable("usuarioId") @UUIDValide String usuarioId,
+                                           @RequestBody @Valid UsuarioAlteracaoRequest dto) {
         usuarioService.editarUsuario(usuarioId, dto);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/resetarSenha/{usuarioId}")
-    public ResponseEntity<String> resetarSenha(@PathVariable("usuarioId") @UUIDValide UUID usuarioId) {
-        return ResponseEntity.accepted().body(usuarioService.resetarSenha(usuarioId));
+    public ResponseEntity<Void> resetarSenha(@PathVariable("usuarioId") @UUIDValide UUID usuarioId) {
+        usuarioService.resetarSenha(usuarioId);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/recuperarSenha")
-    public ResponseEntity<UsuarioResponse> alterarSenha(@RequestBody RecuperarSenha dto) {
-        return ResponseEntity.accepted().body(usuarioService.RecuperarSenha(dto));
+    @ApiOperation("recuperar senha em construção")
+    public ResponseEntity recuperarSenha(@RequestBody RecuperarSenha dto) {
+        usuarioService.RecuperarSenha(dto);
+        return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/alterarSenha/{id}")
-    public ResponseEntity<String> atualizar(AlterarSenhaRequest dto) {
-        return ResponseEntity.accepted().body(usuarioService.alterarSenhaLogado(dto));
+    @PutMapping("/alterarSenha")
+    public ResponseEntity<Void> atualizar(@RequestBody AlterarSenhaRequest dto) {
+        usuarioService.alterarSenhaLogado(dto);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/vincular-perfil")
-    public ResponseEntity vincularPerfil(@RequestBody @Valid PerfilUsuarioRequest dto) {
+    public ResponseEntity<Void> vincularPerfil(@RequestBody @Valid PerfilUsuarioRequest dto) {
         usuarioService.vincularPerfilAoUsuario(dto);
         return ResponseEntity.noContent().build();
     }

@@ -15,6 +15,7 @@ public class StringPadronization extends StdDeserializer<String> {
     public StringPadronization() {
         super(String.class);
     }
+
     public static String converter(String string) {
         if (string != null) {
             String stringSemAcento = string.toUpperCase();
@@ -28,10 +29,17 @@ public class StringPadronization extends StdDeserializer<String> {
     @Override
     public String deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
         try {
-            return converter(_parseString(p,ctxt));
+            return converter(_parseString(p, ctxt));
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
         return null;
+    }
+
+    public static Boolean verificarSeEString(Object string) {
+        if (string instanceof String) {
+            return true;
+        }
+        return false;
     }
 }

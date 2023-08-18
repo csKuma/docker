@@ -54,24 +54,6 @@ public class Handler {
     }
 
 
-////  REQUISIÇÃO COM OPENFEIGN
-//    @ExceptionHandler({FeignException.class, FeignException.FeignClientException.class})
-//    public ResponseEntity<Erro> handleFeignExeption(final FeignException ex){
-//        log.error(ex.getMessage());
-//        String titulo, msgUser, msgDev;
-//
-//        titulo = "ERRO NA REQUISICAO";
-//        msgUser = ex.getMessage();
-//        msgDev = getDevMessageFromStackTrace(ex);
-//
-//        ex.printStackTrace();
-//
-//        Erro erro = novoErro(titulo, ex.status(), ex.getClass().getSimpleName(), msgUser, msgDev);
-//
-//        log.error(ex.getMessage());
-//        return ResponseEntity.status(ex.status()).body(erro);
-//    }
-
 
     //REQUISIÇÃO INVALIDA
     @ExceptionHandler(NumberFormatException.class)

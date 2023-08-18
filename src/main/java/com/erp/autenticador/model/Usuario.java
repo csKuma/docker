@@ -1,6 +1,7 @@
 package com.erp.autenticador.model;
 
 
+import com.erp.autenticador.model.request.UsuarioAlteracaoRequest;
 import com.erp.autenticador.model.request.UsuarioRequest;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
@@ -23,7 +24,7 @@ public class Usuario implements UserDetails {
     @GenericGenerator(name = "UUIDGenerator", strategy = "uuid2")
     @GeneratedValue(generator = "UUIDGenerator")
     @Column(name = "ur05_cod_usuario", columnDefinition = "uuid DEFAULT gen_random_uuid()")
-    private UUID id ;
+    private UUID id;
     @Column(name = "ur05_nome")
     private String nome;
     @Column(name = "ur05_cpf")
@@ -43,6 +44,10 @@ public class Usuario implements UserDetails {
     private LocalDate dataCadastro;
     @Column(name = "ur05_ultimo_acesso")
     private LocalDate ultimoAcesso;
+    @Column(name = "ur05_data_bloqueio")
+    private LocalDate dataBloqueio;
+    @Column(name = "ur05_bloqueado")
+    private Boolean bloqueado;
     @OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER)
     private List<PerfilUsuario> roles;
 
@@ -65,14 +70,37 @@ public class Usuario implements UserDetails {
     }
 
     public Usuario(UsuarioRequest dto) {
-        this.nome = dto.nome();
-        this.cpfCnpj = dto.cpf();
-        this.usuario = dto.email();
-        this.telefone = dto.telefone();
-        this.email = dto.email();
+        this.nome = dto.getNome();
+        this.cpfCnpj = dto.getCpf();
+        this.usuario = dto.getEmail();
+        this.telefone = dto.getTelefone();
+        this.email = dto.getEmail();
         this.primeiroAcesso = true;
+        this.bloqueado = false;
     }
 
+    public Usuario(UsuarioAlteracaoRequest dto) {
+        this.nome = dto.getNome();
+        this.cpfCnpj = dto.getCpf();
+        this.telefone = dto.getTelefone();
+        this.email = dto.getEmail();
+    }
+
+    public LocalDate getDataBloqueio() {
+        return dataBloqueio;
+    }
+
+    public void setDataBloqueio(LocalDate dataBloqueio) {
+        this.dataBloqueio = dataBloqueio;
+    }
+
+    public Boolean getBloqueado() {
+        return bloqueado;
+    }
+
+    public void setBloqueado(Boolean bloqueado) {
+        this.bloqueado = bloqueado;
+    }
 
     public UUID getId() {
         return id;
@@ -144,9 +172,9 @@ public class Usuario implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        this.roles.removeIf(r->r.getAtivo() == null || !r.getAtivo());
+        this.roles.removeIf(r -> r.getAtivo() == null || !r.getAtivo());
         return Collections.unmodifiableList(
-                roles.stream().map(r->r.getPerfil()).collect(Collectors.toList())
+                roles.stream().map(r -> r.getPerfil()).collect(Collectors.toList())
         );
 //        return null;
     }
@@ -182,8 +210,8 @@ public class Usuario implements UserDetails {
     }
 
     public List<Perfil> getRoles() {
-        this.roles.removeIf(r->!r.getAtivo());
-        return roles.stream().map(r->r.getPerfil()).collect(Collectors.toList());
+        this.roles.removeIf(r -> !r.getAtivo());
+        return roles.stream().map(r -> r.getPerfil()).collect(Collectors.toList());
     }
 
     public LocalDate getDataCadastro() {

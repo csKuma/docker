@@ -12,22 +12,65 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.UUID;
 
-public record UsuarioRequest(
-        @JsonDeserialize(using = StringPadronization.class)
-        @NotBlank
-        String nome,
-        @NotBlank
-        String cpf,
-        @Email
-        @NotBlank
-        String email,
-        @NotBlank
-        String telefone,
+public class UsuarioRequest {
+    @JsonDeserialize(using = StringPadronization.class)
+    @NotBlank
+    private String nome;
+    @NotBlank
+    private String cpf;
+    @Email
+    @NotBlank
+    private String email;
+    @NotBlank
+    private String telefone;
+    private UUID empresa;
+    private UUID perfil;
 
-        UUID empresa,
-//        @UUIDValide
-//        @NotBlank
-        UUID perfil
-) {
+    public String getNome() {
+        return nome;
+    }
 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public UUID getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(UUID empresa) {
+        this.empresa = empresa;
+    }
+
+    public UUID getPerfil() {
+        return perfil;
+    }
+
+    public void setPerfil(UUID perfil) {
+        this.perfil = perfil;
+    }
 }

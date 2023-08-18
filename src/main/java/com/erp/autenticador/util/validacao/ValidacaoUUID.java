@@ -5,8 +5,6 @@ import com.erp.autenticador.model.exception.BadRequest;
 import java.util.UUID;
 
 public class ValidacaoUUID {
-
-
     public static void validarUUID(String uuid) {
         try {
             UUID uuid1 = UUID.fromString(uuid);

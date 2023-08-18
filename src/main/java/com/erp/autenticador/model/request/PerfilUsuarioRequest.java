@@ -1,17 +1,27 @@
 package com.erp.autenticador.model.request;
 
-import com.erp.autenticador.model.exception.UUIDValide;
-
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
-public record PerfilUsuarioRequest(
-        @NotBlank
-        @UUIDValide
-        UUID perfil,
-        @NotBlank()
-        @UUIDValide
-        UUID usuario
-) {
+public class PerfilUsuarioRequest {
+    @NotBlank
+    UUID perfil;
+    @NotBlank()
+    UUID usuario;
+
+    public UUID getPerfil() {
+        return perfil;
+    }
+
+    public void setPerfil(UUID perfil) {
+        this.perfil = perfil;
+    }
+
+    public UUID getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(UUID usuario) {
+        this.usuario = usuario;
+    }
 }

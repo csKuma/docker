@@ -33,7 +33,6 @@ public class ModuloController {
                                                               @RequestParam(value = "descricao", required = false) String descricao
     ) {
         return ResponseEntity.ok().body(moduloService.listarModulosDaEmpresa(empresaId, descricao));
-//        return null;
     }
 
 }

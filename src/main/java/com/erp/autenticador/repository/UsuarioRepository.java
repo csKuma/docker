@@ -23,14 +23,19 @@ public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
     @Query("update Usuario us set us.ultimoAcesso=now() where us=:usuario")
     void setUltimoAcesso(Usuario usuario);
 
-    @Query("select us from Usuario us where (:email is null or us.email=:email) and (:telefone is null or us.telefone=:telefone)")
-    Optional<Usuario> buscarUsuarioPorEmailOuTelefone(String email, String telefone);
+//    @Query("select us from Usuario us where (:email is null or us.email=:email) and (:telefone is null or us.telefone=:telefone)")
+//    Optional<Usuario> buscarUsuarioPorEmailOuTelefone(String email, String telefone);
 
 
     List<Usuario> findAll(Specification<Usuario> and);
 
 
     boolean existsByCpfCnpj(String cpfCnpj);
+
     boolean existsByEmail(String cpfCnpj);
+
     boolean existsByTelefone(String cpfCnpj);
+
+    @Query("select us from Usuario us where (:cpf is null or us.cpfCnpj=:cpf) and (:email is null or us.email=:email)")
+    Optional<Usuario> buscarUsuarioPorCpfandEmail(String cpf, String email);
 }

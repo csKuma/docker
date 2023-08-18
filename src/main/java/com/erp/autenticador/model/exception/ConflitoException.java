@@ -12,6 +12,9 @@ public class ConflitoException extends RuntimeException implements Supplier<Conf
         super(message);
         this.mensagem = message;
         this.erros = erros;
+    } public ConflitoException(String message) {
+        super(message);
+        this.mensagem = message;
     }
 
     public List<CampoErro> getErros() {
