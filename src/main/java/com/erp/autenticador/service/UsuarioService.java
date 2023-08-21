@@ -59,13 +59,13 @@ public class UsuarioService {
 
     private void validarCadastroUsuario(UsuarioRequest dto) {
         List<CampoErro> erros = new ArrayList<>();
-        if (usuarioRepository.existsByCpfCnpj(dto.getCpf())) {
+        if (Objects.nonNull(dto.getCpf()) && usuarioRepository.existsByCpfCnpj(dto.getCpf())) {
             erros.add(new CampoErro("cpfCnpj", "cpfCnpj ja cadastrado"));
         }
-        if (usuarioRepository.existsByEmail(dto.getCpf())) {
+        if (Objects.nonNull(dto.getEmail()) && usuarioRepository.existsByEmail(dto.getEmail())) {
             erros.add(new CampoErro("email", "email ja cadastrado"));
         }
-        if (usuarioRepository.existsByTelefone(dto.getTelefone())) {
+        if (Objects.nonNull(dto.getTelefone()) && usuarioRepository.existsByTelefone(dto.getTelefone())) {
             erros.add(new CampoErro("telefone", "telefone ja cadastrado"));
         }
         if (!erros.isEmpty()) throw new ConflitoException("Os dados a seguir estão cadastrados:", erros);
@@ -102,12 +102,12 @@ public class UsuarioService {
 
     public UsuarioResponse buscarUsuarioPorId(UUID idUsuario) {
         return usuarioRepository.findById(idUsuario)
-                .map(u -> modelMapper.map(u,UsuarioResponse.class))
+                .map(u -> modelMapper.map(u, UsuarioResponse.class))
                 .orElseThrow(new NotFound("Usuario não encontrado"));
     }
 
     public Page<UsuarioResponse> ListarUsuariosPaginado(Pageable pageable) {
-        return usuarioRepository.findAll(pageable).map(u -> modelMapper.map(u,UsuarioResponse.class));
+        return usuarioRepository.findAll(pageable).map(u -> modelMapper.map(u, UsuarioResponse.class));
     }
 
     public PrimeiroAcessoResponse primeiroAcesso(PrimeiroAcessoDto dto) {

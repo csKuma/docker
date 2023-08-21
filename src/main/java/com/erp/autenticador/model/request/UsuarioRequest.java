@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 public class UsuarioRequest {
@@ -21,8 +22,8 @@ public class UsuarioRequest {
     @Email
     @NotBlank
     private String email;
-    @NotBlank
     private String telefone;
+    @NotNull
     private UUID empresa;
     private UUID perfil;
 
