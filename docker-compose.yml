@@ -1,0 +1,39 @@
+version: '3.7'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+#    image: api-autenticador
+    container_name: api-autenticador
+    ports:
+      - '8083:8080'
+    depends_on:
+    - api-usuario-database
+    networks:
+      - api-usuario
+
+  api-usuario-database:
+    container_name: base-usuario-teste
+    hostname: api-usuario-database
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_DB=erp_usuario_flaway_teste
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=kuma1234
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    ports:
+      - '5435:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - api-usuario
+networks:
+  api-usuario:
+    driver: bridge
+volumes:
+  postgres-data:
+    driver: local
