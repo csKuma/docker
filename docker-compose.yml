@@ -16,7 +16,7 @@ services:
   api-usuario-database:
     container_name: base-usuario-teste
     hostname: api-usuario-database
-    image: postgres:14-alpine
+    image: postgres:15-alpine
     environment:
       - POSTGRES_DB=erp_usuario_flaway_teste
       - POSTGRES_USER=postgres
