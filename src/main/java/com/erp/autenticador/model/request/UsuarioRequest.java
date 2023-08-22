@@ -19,7 +19,7 @@ public class UsuarioRequest {
     private String email;
     private String telefone;
     private UUID empresa;
-    @NotNull
+    @NotNull(message = "perfil não pode ser nulo")
     private UUID perfil;
 
     public String getNome() {

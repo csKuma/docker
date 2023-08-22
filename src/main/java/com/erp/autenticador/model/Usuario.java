@@ -79,12 +79,6 @@ public class Usuario implements UserDetails {
         this.bloqueado = false;
     }
 
-    public Usuario(UsuarioAlteracaoRequest dto) {
-        this.nome = dto.getNome();
-        this.cpfCnpj = dto.getCpf();
-        this.telefone = dto.getTelefone();
-        this.email = dto.getEmail();
-    }
 
     public LocalDate getDataBloqueio() {
         return dataBloqueio;

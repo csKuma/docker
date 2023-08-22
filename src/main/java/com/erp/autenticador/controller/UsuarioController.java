@@ -46,7 +46,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{usuarioId}")
-    public ResponseEntity atualizarUsuario(@PathVariable("usuarioId") @UUIDValide String usuarioId,
+    public ResponseEntity atualizarUsuario(@PathVariable("usuarioId") @UUIDValide UUID usuarioId,
                                            @RequestBody @Valid UsuarioAlteracaoRequest dto) {
         usuarioService.editarUsuario(usuarioId, dto);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
