@@ -23,9 +23,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static org.springframework.util.ClassUtils.getDescriptiveType;
@@ -109,7 +107,6 @@ public class Handler {
     // Campos vazios ou nulos (@Valid)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Erro> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        Erro err = new Erro();
         List<CampoErro> erros = new ArrayList<>();
         String titulo, msgUser;
 
@@ -123,7 +120,7 @@ public class Handler {
         ex.printStackTrace();
 
         Erro erro = novoErroComLista(titulo, 409, msgUser, erros);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
     }
 
     // Parâmetro ausente (@RequestParam)

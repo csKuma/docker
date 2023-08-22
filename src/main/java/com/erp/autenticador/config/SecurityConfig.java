@@ -44,6 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/login/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/usuarios").authenticated()
+//                .antMatchers("/actuator/**").permitAll()
                 .anyRequest().permitAll()
                 .and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -55,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources/**", "/api/**",
-                "/configuration/**", "/swagger-ui.html", "/webjars/**", "/api/swagger-ui.html");
+                "/configuration/**", "/swagger-ui.html", "/webjars/**", "/api/swagger-ui.html","/actuator/**");
     }
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

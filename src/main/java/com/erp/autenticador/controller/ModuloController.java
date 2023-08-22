@@ -3,7 +3,7 @@ package com.erp.autenticador.controller;
 import com.erp.autenticador.model.exception.UUIDValide;
 import com.erp.autenticador.model.response.ModuloResponse;
 import com.erp.autenticador.service.ModuloService;
-import io.swagger.annotations.ApiOperation;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +20,7 @@ public class ModuloController {
     }
 
     @GetMapping
-    @ApiOperation("listar todos os modulos junto com submodulos")
+//    @ApiOperation("listar todos os modulos junto com submodulos")
     public ResponseEntity<List<ModuloResponse>> listarModulos(
             @RequestParam(value = "descricao", required = false) String descricao
     ) {
@@ -28,7 +28,7 @@ public class ModuloController {
     }
 
     @GetMapping("/empresa")
-    @ApiOperation("rota para listar Modulos de uma empresa (em consturção)")
+//    @ApiOperation("rota para listar Modulos de uma empresa (em consturção)")
     public ResponseEntity<List<ModuloResponse>> listarModulos(@RequestParam("empresaId") @UUIDValide String empresaId,
                                                               @RequestParam(value = "descricao", required = false) String descricao
     ) {

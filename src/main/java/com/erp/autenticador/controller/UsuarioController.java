@@ -5,7 +5,7 @@ import com.erp.autenticador.model.request.*;
 import com.erp.autenticador.model.response.PrimeiroAcessoResponse;
 import com.erp.autenticador.model.response.UsuarioResponse;
 import com.erp.autenticador.service.UsuarioService;
-import io.swagger.annotations.ApiOperation;
+//import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -59,7 +59,8 @@ public class UsuarioController {
     }
 
     @PutMapping("/recuperarSenha")
-    @ApiOperation("recuperar senha em construção")
+//    @ApiOperation("recuperar senha em construção")
+
     public ResponseEntity recuperarSenha(@RequestBody RecuperarSenha dto) {
         usuarioService.RecuperarSenha(dto);
         return ResponseEntity.ok().build();

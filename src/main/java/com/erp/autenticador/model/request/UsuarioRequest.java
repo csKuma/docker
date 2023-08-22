@@ -1,13 +1,8 @@
 package com.erp.autenticador.model.request;
 
-import com.erp.autenticador.model.exception.UUIDValide;
 import com.erp.autenticador.util.StringPadronization;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -15,16 +10,16 @@ import java.util.UUID;
 
 public class UsuarioRequest {
     @JsonDeserialize(using = StringPadronization.class)
-    @NotBlank
+    @NotBlank(message = "nome não pode ser nulo ou vazio")
     private String nome;
-    @NotBlank
+    @NotBlank(message = "cpf não deve ser nulo ou vazio")
     private String cpf;
     @Email
-    @NotBlank
+    @NotBlank(message = "email não deve ser nulo ou vazio")
     private String email;
     private String telefone;
-    @NotNull
     private UUID empresa;
+    @NotNull
     private UUID perfil;
 
     public String getNome() {
