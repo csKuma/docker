@@ -1,14 +1,13 @@
 package com.erp.autenticador.model;
 
 
-import com.erp.autenticador.model.request.UsuarioAlteracaoRequest;
 import com.erp.autenticador.model.request.UsuarioRequest;
+import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;

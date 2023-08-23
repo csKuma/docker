@@ -1,6 +1,6 @@
 package com.erp.autenticador.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.UUID;
 
 @Entity

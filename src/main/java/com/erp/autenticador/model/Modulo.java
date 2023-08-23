@@ -1,7 +1,7 @@
 package com.erp.autenticador.model;
 
-import javax.persistence.*;
-import java.time.LocalDate;
+import jakarta.persistence.*;
+
 import java.util.UUID;
 
 @Entity

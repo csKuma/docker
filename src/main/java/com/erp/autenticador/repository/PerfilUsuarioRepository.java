@@ -17,7 +17,4 @@ public interface PerfilUsuarioRepository extends JpaRepository<PerfilUsuario, UU
     void desabilitarPerfilAnterior(@Param("usuario") UUID usuario);
 
 
-
-    @Query("select pu from PerfilUsuario pu where pu.perfil.id=:perfil and pu.usuario.id=:usuario and pu.ativo is true and pu.dataDesabilitacao is null ")
-    Optional<PerfilUsuario> buscarPerfilAnterior(UUID usuario);
 }

@@ -2,7 +2,7 @@ package com.erp.autenticador.model;
 
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;

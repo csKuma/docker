@@ -1,6 +1,6 @@
 package com.erp.autenticador.model.request;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.*;
 
 public class PrimeiroAcessoDto {
     @NotBlank

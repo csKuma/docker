@@ -3,7 +3,7 @@ package com.erp.autenticador.model.request;
 import com.erp.autenticador.util.StringPadronization;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import java.util.UUID;
 
 public class ModuloRequest {

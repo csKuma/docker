@@ -1,18 +1,19 @@
 package com.erp.autenticador.controller;
 
-import com.erp.autenticador.model.exception.UUIDValide;
+
 import com.erp.autenticador.model.request.*;
 import com.erp.autenticador.model.response.PrimeiroAcessoResponse;
 import com.erp.autenticador.model.response.UsuarioResponse;
 import com.erp.autenticador.service.UsuarioService;
 //import io.swagger.annotations.ApiOperation;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+
 import java.util.UUID;
 
 @RestController

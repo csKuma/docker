@@ -2,7 +2,7 @@ package com.erp.autenticador.model;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.UUID;
 

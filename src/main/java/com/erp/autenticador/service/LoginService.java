@@ -33,10 +33,9 @@ public class LoginService {
 
     public TokenResponse login(LoginDTO dto) {
         Authentication authenticate = getAuthentication(dto);
-        String token = tokenService.gerarToken(authenticate);
-        Usuario usuario = tokenService.getUsuario(token);
-        usuarioRepository.setUltimoAcesso(usuario);
-        return montarTokenResponse(token, usuario);
+        String token = tokenService.generateToken((Usuario) authenticate.getPrincipal());
+//        Usuario usuario = tokenService.getUsuario(token);
+        return montarTokenResponse(token, (Usuario) authenticate.getPrincipal());
     }
 
     private TokenResponse montarTokenResponse(String token, Usuario usuario) {
@@ -45,18 +44,18 @@ public class LoginService {
                 usuario.getId(),
                 usuario.getNome(),
                 getPerfis(usuario),
-                getModulos(usuario),
+                /*getModulos(usuario),*/null,
                 usuario.getPrimeiroAcesso());
     }
 
-    private List<ModuloDtoSimples> getModulos(Usuario usuario) {
-        return moduloRepository.findByPerfilIn(usuario.getRoles())
-                .stream().map(f ->
-                        new ModuloDtoSimples(
-                                f.getDescricao(),
-                                getSubModulo(f))
-                ).collect(Collectors.toList());
-    }
+//    private List<ModuloDtoSimples> getModulos(Usuario usuario) {
+//        return moduloRepository.findByPerfilIn(usuario.getRoles())
+//                .stream().map(f ->
+//                        new ModuloDtoSimples(
+//                                f.getDescricao(),
+//                                getSubModulo(f))
+//                ).collect(Collectors.toList());
+//    }
 
     private List<String> getSubModulo(Modulo f) {
         return moduloRepository.buscarSubModolos(f);
@@ -82,13 +81,14 @@ public class LoginService {
     }
 
     public CheckTokenDTO checkToken(CheckTokenRequest dto) {
-        String token = dto.getToken();
-        if (tokenService.isTokenValido(token)) {
-            Usuario usuario = tokenService.getUsuario(token);
-            CheckTokenDTO checkTokenDTO = new CheckTokenDTO(tokenService.getUsuario(token), tokenService.getDataExpiracao(token));
-            /*getModulosUsuario(usuario),getPerfis(usuario));*/
-            return checkTokenDTO;
-        }
+//        String token = dto.getToken();
+//        if (tokenService.isTokenValido(token)) {
+//            Usuario usuario = tokenService.getUsuario(token);
+//            CheckTokenDTO checkTokenDTO = new CheckTokenDTO(tokenService.getUsuario(token),
+//                    /*tokenService.getDataExpiracao(token)*/null);
+//            /*getModulosUsuario(usuario),getPerfis(usuario));*/
+//            return checkTokenDTO;
+//        }
         throw new TokenInvalidoException("Token expirado ou invalido");
     }
 }

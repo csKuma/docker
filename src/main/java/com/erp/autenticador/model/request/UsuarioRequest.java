@@ -2,10 +2,9 @@ package com.erp.autenticador.model.request;
 
 import com.erp.autenticador.util.StringPadronization;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import jakarta.validation.constraints.*;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+
 import java.util.UUID;
 
 public class UsuarioRequest {

@@ -1,6 +1,6 @@
 package com.erp.autenticador.model.request;
 
-import javax.validation.constraints.Email;
+import jakarta.validation.constraints.*;
 
 public class UsuarioEdicaoRequest {
     private String nome;

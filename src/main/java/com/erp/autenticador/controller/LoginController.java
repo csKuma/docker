@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.NotBlank;
+
 
 @RestController
 @RequestMapping("/login")
@@ -30,7 +30,7 @@ public class LoginController {
         return ResponseEntity.ok().body(service.login(dto));
     }
     @PostMapping("/checkToken")
-    public ResponseEntity<CheckTokenDTO> checkToken(@RequestBody @NotBlank CheckTokenRequest token){
+    public ResponseEntity<CheckTokenDTO> checkToken(@RequestBody CheckTokenRequest token){
         return ResponseEntity.ok().body(service.checkToken(token));
     }
 }

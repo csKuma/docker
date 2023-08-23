@@ -1,6 +1,6 @@
 package com.erp.autenticador.model.response;
 
-import javax.validation.constraints.Email;
+
 import java.util.UUID;
 
 public class UsuarioResponse {

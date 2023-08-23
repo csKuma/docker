@@ -11,10 +11,10 @@ import java.util.UUID;
 
 public interface ModuloRepository extends JpaRepository<Modulo, UUID> {
 
-    @Query("select distinct(d.modulo) from PerfilModulo d " +
-            "where d.perfil in (:roles) and d.ativo is true " +
-            "and d.modulo.moduloPai is null")
-    List<Modulo> findByPerfilIn(List<Perfil> roles);
+//    @Query("select distinct(d.modulo) from PerfilModulo d " +
+//            "where d.perfil in (:roles) and d.ativo is true " +
+//            "and d.modulo.moduloPai is null")
+//    List<Modulo> findByPerfilIn(List<Perfil> roles);
 @Query("select distinct md from Modulo md where md.moduloPai is null " +
         "and (:descricao is null or md.descricao like %:descricao%)" +
         "order by md.descricao ")
