@@ -1,8 +1,11 @@
 package com.erp.autenticador.config;
 
+import com.erp.autenticador.model.Modulo;
 import com.erp.autenticador.model.Usuario;
+import com.erp.autenticador.model.request.ModuloRequest;
 import com.erp.autenticador.model.request.UsuarioAlteracaoRequest;
 import com.erp.autenticador.model.request.UsuarioRequest;
+import com.erp.autenticador.model.response.ModuloResponse;
 import com.erp.autenticador.model.response.UsuarioResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
@@ -35,6 +38,13 @@ public class ModelMapperConfig {
                 .addMapping(Usuario::getCpfCnpj, UsuarioResponse::setCpfCnpj)
                 .addMapping(Usuario::getEmail, UsuarioResponse::setEmail);
 
+        modelMapper.createTypeMap(Modulo.class, ModuloResponse.class)
+                .addMapping(Modulo::getId, ModuloResponse::setId)
+                .addMapping(Modulo::getDescricao, ModuloResponse::setDescricao);
+
+        modelMapper.createTypeMap(ModuloRequest.class, Modulo.class)
+                .addMapping(ModuloRequest::getDescricao, Modulo::setDescricao)
+                .addMapping(ModuloRequest::getNome, Modulo::setNome);
 
         return modelMapper;
     }

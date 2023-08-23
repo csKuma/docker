@@ -13,6 +13,8 @@ public class Modulo {
     private UUID id;
     @Column(name = "ur02_descricao")
     private String descricao;
+    @Column(name = "ur02_nome")
+    private String nome;
     @ManyToOne
     @JoinColumn(name = "fkur02ur02_modulo_pai")
     private Modulo moduloPai;
@@ -23,6 +25,14 @@ public class Modulo {
     private String icone;
     @Column(name = "ur02_path")
     private String path;
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
     public UUID getId() {
         return id;

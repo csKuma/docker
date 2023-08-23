@@ -46,14 +46,14 @@ public class UsuarioController {
     }
 
     @PutMapping("/{usuarioId}")
-    public ResponseEntity atualizarUsuario(@PathVariable("usuarioId") @UUIDValide UUID usuarioId,
+    public ResponseEntity atualizarUsuario(@PathVariable("usuarioId")  UUID usuarioId,
                                            @RequestBody @Valid UsuarioAlteracaoRequest dto) {
         usuarioService.editarUsuario(usuarioId, dto);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/resetarSenha/{usuarioId}")
-    public ResponseEntity<Void> resetarSenha(@PathVariable("usuarioId") @UUIDValide UUID usuarioId) {
+    public ResponseEntity<Void> resetarSenha(@PathVariable("usuarioId")  UUID usuarioId) {
         usuarioService.resetarSenha(usuarioId);
         return ResponseEntity.ok().build();
     }
