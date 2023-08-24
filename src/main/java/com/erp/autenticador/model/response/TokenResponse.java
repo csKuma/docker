@@ -5,12 +5,11 @@ import java.util.UUID;
 
 public class TokenResponse {
     private String access_token;
-    //     String token_type="Bearer", // tirar
     private UUID usuario;
     private String nome;
     private String perfil;
     private List<ModuloDtoSimples> modulos;
-    private Boolean primeiroacesso; //mudar pra primeiro acesso
+    private Boolean primeiroacesso;
 
     public TokenResponse() {
     }
@@ -33,47 +32,23 @@ public class TokenResponse {
         return access_token;
     }
 
-    public void setAccess_token(String access_token) {
-        this.access_token = access_token;
-    }
-
     public UUID getUsuario() {
         return usuario;
-    }
-
-    public void setUsuario(UUID usuario) {
-        this.usuario = usuario;
     }
 
     public String getNome() {
         return nome;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
     public String getPerfil() {
         return perfil;
-    }
-
-    public void setPerfil(String perfil) {
-        this.perfil = perfil;
     }
 
     public List<ModuloDtoSimples> getModulos() {
         return modulos;
     }
 
-    public void setModulos(List<ModuloDtoSimples> modulos) {
-        this.modulos = modulos;
-    }
-
     public Boolean getPrimeiroacesso() {
         return primeiroacesso;
-    }
-
-    public void setPrimeiroacesso(Boolean primeiroacesso) {
-        this.primeiroacesso = primeiroacesso;
     }
 }

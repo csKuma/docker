@@ -169,9 +169,8 @@ public class Usuario implements UserDetails {
         return Collections.unmodifiableList(
                 roles.stream().map(r -> r.getPerfil()).collect(Collectors.toList())
         );
-//        return null;
-    }
 
+    }
     @Override
     public String getPassword() {
         return this.senha;

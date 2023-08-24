@@ -1,14 +1,11 @@
 package com.erp.autenticador.repository;
 
-import com.erp.autenticador.model.Perfil;
 import com.erp.autenticador.model.PerfilUsuario;
-import com.erp.autenticador.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.Optional;
 import java.util.UUID;
 
 public interface PerfilUsuarioRepository extends JpaRepository<PerfilUsuario, UUID> {

@@ -3,7 +3,6 @@ package com.erp.autenticador.controller;
 import com.erp.autenticador.model.request.CheckTokenRequest;
 import com.erp.autenticador.model.request.LoginDTO;
 import com.erp.autenticador.model.response.CheckTokenDTO;
-import com.erp.autenticador.model.response.TokenDTO;
 import com.erp.autenticador.model.response.TokenResponse;
 import com.erp.autenticador.service.LoginService;
 import org.springframework.http.ResponseEntity;

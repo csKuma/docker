@@ -29,17 +29,18 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auh -> auh
+                        .requestMatchers("/modulo").authenticated()
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration AuthenticationConfiguration) throws Exception {
         return AuthenticationConfiguration.getAuthenticationManager();
     }
-
 
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

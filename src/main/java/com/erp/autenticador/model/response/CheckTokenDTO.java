@@ -1,5 +1,6 @@
 package com.erp.autenticador.model.response;
 
+import com.erp.autenticador.model.Perfil;
 import com.erp.autenticador.model.Usuario;
 import com.erp.autenticador.util.DateControl;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -19,39 +20,24 @@ public class CheckTokenDTO {
     private String nome;
     private Boolean senhaPadrao;
     private String cpf;
-//    private List<PerfilDto> prefil;
+    private String perfil;
 
-    public List<ModuloDTO> getModulos() {
-        return modulos;
-    }
-
-    public void setModulos(List<ModuloDTO> modulos) {
-        this.modulos = modulos;
-    }
-
-    private List<ModuloDTO> modulos;
+    private List<ModuloDtoSimples> modulos;
 
     @Deprecated
     public CheckTokenDTO() {
     }
 
-//    public CheckTokenDTO(Usuario usuario, Date expiracao, List<ModuloDTO> modulos) {
-//        this.usuario = usuario.getId();
-//        this.expiracao = expiracao;
-//        this.nome = usuario.getNome();
-//        this.cpf= usuario.getCpf();
-//        this.senhaPadrao = usuario.getSenhaPadrao();
-//        this.modulos = modulos; //TODO: adicionei aqui
-//    }
-    public CheckTokenDTO(Usuario usuario, Date expiracao/*, List<ModuloDTO> modulos, List<PerfilDto> prefil*/) {
+    public CheckTokenDTO(Usuario usuario, Date expiracao, List<ModuloDtoSimples> modulos, String prefil) {
         this.usuario = usuario.getId();
         this.expiracao = expiracao;
         this.nome = usuario.getNome();
-        this.cpf= usuario.getCpfCnpj();
+        this.cpf = usuario.getCpfCnpj();
         this.senhaPadrao = usuario.getPrimeiroAcesso();
-//        this.modulos = modulos;
-//        this.prefil=prefil;//TODO: adicionei aqui
+        this.modulos = modulos;
+        this.perfil = prefil;
     }
+
 
     public UUID getUsuario() {
         return usuario;
@@ -93,11 +79,19 @@ public class CheckTokenDTO {
         this.cpf = cpf;
     }
 
-//    public List<PerfilDto> getPrefil() {
-//        return prefil;
-//    }
-//
-//    public void setPrefil(List<PerfilDto> prefil) {
-//        this.prefil = prefil;
-//    }
+    public String getPerfil() {
+        return perfil;
+    }
+
+    public void setPerfil(String perfil) {
+        this.perfil = perfil;
+    }
+
+    public List<ModuloDtoSimples> getModulos() {
+        return modulos;
+    }
+
+    public void setModulos(List<ModuloDtoSimples> modulos) {
+        this.modulos = modulos;
+    }
 }

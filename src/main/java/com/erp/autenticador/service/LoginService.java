@@ -17,6 +17,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,9 +35,10 @@ public class LoginService {
 
     public TokenResponse login(LoginDTO dto) {
         Authentication authenticate = getAuthentication(dto);
-        String token = tokenService.generateToken((Usuario) authenticate.getPrincipal());
-//        Usuario usuario = tokenService.getUsuario(token);
-        return montarTokenResponse(token, (Usuario) authenticate.getPrincipal());
+        Usuario usuario= (Usuario) authenticate.getPrincipal();
+        String token = tokenService.generateToken(usuario);
+//        usuarioRepository.setUltimoAcesso(usuario);
+        return montarTokenResponse(token, usuario);
     }
 
     private TokenResponse montarTokenResponse(String token, Usuario usuario) {
@@ -44,18 +47,21 @@ public class LoginService {
                 usuario.getId(),
                 usuario.getNome(),
                 getPerfis(usuario),
-                /*getModulos(usuario),*/null,
+                getModulos(usuario),
                 usuario.getPrimeiroAcesso());
     }
 
-//    private List<ModuloDtoSimples> getModulos(Usuario usuario) {
-//        return moduloRepository.findByPerfilIn(usuario.getRoles())
-//                .stream().map(f ->
-//                        new ModuloDtoSimples(
-//                                f.getDescricao(),
-//                                getSubModulo(f))
-//                ).collect(Collectors.toList());
-//    }
+    private List<ModuloDtoSimples> getModulos(Usuario usuario) {
+        var roles = usuario.getRoles();
+        System.out.println(roles);
+        return moduloRepository.findByPerfilIn(roles)
+                .stream().map(f ->
+                        new ModuloDtoSimples(
+                                f.getDescricao(),
+                                getSubModulo(f))
+                ).collect(Collectors.toList());
+//        return null;
+    }
 
     private List<String> getSubModulo(Modulo f) {
         return moduloRepository.buscarSubModolos(f);
@@ -81,14 +87,15 @@ public class LoginService {
     }
 
     public CheckTokenDTO checkToken(CheckTokenRequest dto) {
-//        String token = dto.getToken();
-//        if (tokenService.isTokenValido(token)) {
-//            Usuario usuario = tokenService.getUsuario(token);
-//            CheckTokenDTO checkTokenDTO = new CheckTokenDTO(tokenService.getUsuario(token),
-//                    /*tokenService.getDataExpiracao(token)*/null);
-//            /*getModulosUsuario(usuario),getPerfis(usuario));*/
-//            return checkTokenDTO;
-//        }
+
+        String token = dto.getToken();
+        String s = tokenService.validarToken(token);
+        if (Objects.nonNull(s) && !s.isEmpty()) {
+            Usuario user = usuarioRepository.findById(UUID.fromString(s)).get();
+            return new CheckTokenDTO(user, tokenService.getDataExpiracao(token), getModulos(user), getPerfis(user));
+        }
         throw new TokenInvalidoException("Token expirado ou invalido");
     }
+
+
 }
